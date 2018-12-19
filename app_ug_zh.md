@@ -13,7 +13,7 @@
     </application>
 </manifest>
 ```
-network_security_config文件放在 **res/xml/**目录下面：
+network_security_config文件放在 **res/xml/** 目录下面：
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
 <network-security-config>
