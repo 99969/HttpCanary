@@ -36,7 +36,7 @@ network_security_config文件放在 **res/xml/** 目录下面：
 ##### 1.2.2 在VirtualApp中安装目标App
 打开VirtualApp安装抓包目标App，然后在VirtualApp中启动目标App，这样就可以在HttpCanary看到想抓的App请求包了，但是抓包记录显示的应用信息会是VirtualApp。
 
-![](https://github.com/MegatronKing/HttpCanary/blog/master/assets/screenshot_en_03.png)
+![](https://github.com/MegatronKing/HttpCanary/blob/master/assets/screenshot_en_03.png)
 
 ### 1.3 补充说明
 有些App会校验证书签名，如果和服务端不匹配的话，客户端和服务端会握手失败，拒绝连接。这种情况下，HttpCanary无论如何都是抓不到包的，且没有任何办法可以绕过去（除非我们能拿到服务端的证书，这个还是不要想了）。
@@ -44,12 +44,12 @@ network_security_config文件放在 **res/xml/** 目录下面：
 ## 2. HTTP/HTTPS注入
 HttpCanary提供了两种不同的注入模式，分别是静态注入和动态注入。在首页长按抓包记录，然后在弹框中选择一种注入模式。
 
-![](https://github.com/MegatronKing/HttpCanary/blog/master/assets/screenshot_en_01.png)
+![](https://github.com/MegatronKing/HttpCanary/blob/master/assets/screenshot_en_01.png)
 
 ### 2.1 静态注入
 静态注入支持对HTTP/HTTPS包全量的注入，包括请求参数、请求头、请求体、响应行、响应头、响应体等。另外，如果配置了静态注入，注入器将会缓存起来，以便后面重复使用。但是可以前往App的设置->模组管理种，对其进行禁用、启用、删除等操作。
 
-![](https://github.com/MegatronKing/HttpCanary/blog/master/assets/screenshot_en_02.png)
+![](https://github.com/MegatronKing/HttpCanary/blob/master/assets/screenshot_en_02.png)
 
 ### 2.2 动态注入
 相比于静态注入，动态注入不支持对请求体和响应体的注入，主要是由于手机端不方便处理太大数据类型的请求体和响应体。不过，我们正在考虑支持动态注入一些小数据类型的请求体和响应体。
@@ -58,7 +58,7 @@ HttpCanary提供了两种不同的注入模式，分别是静态注入和动态�
 ## 3. 内容预览
 HttpCanary提供了众多数据类型的预览，比如json格式等等。
 
-![](https://github.com/MegatronKing/HttpCanary/blog/master/assets/screenshot_en_04.png)
+![](https://github.com/MegatronKing/HttpCanary/blob/master/assets/screenshot_en_04.png)
 
 下表是HttpCanary对一些数据类型的支持明细（持续更新中）。
 
