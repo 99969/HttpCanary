@@ -80,7 +80,7 @@ The following is the support detail list and we will update it continually.
 | image/gif | true |
 | image/jpeg | true |
 | image/png | true |
-| image/webp | false |
+| image/webp | true |
 | text/plain | some of |
 | video/mpeg | false |
 | video/mp4 | false |
