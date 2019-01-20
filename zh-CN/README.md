@@ -1,4 +1,7 @@
+[TOC]
+
 # HttpCanary使用手册
+
 HttpCanary是Android平台下功能最强大的抓包和注入工具，支持HTTP、HTTPS、HTTP2和WebSocket等多种协议。
 
 在使用之前，建议阅读下HttpCanary的基本使用步骤和进阶用法，以便对HttpCanary的特性有一个大致的了解。
