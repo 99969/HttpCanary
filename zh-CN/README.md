@@ -208,7 +208,7 @@ HttpCanary提供了两种不同的注入模式，分别是静态注入和动态�
 
 ![](https://github.com/MegatronKing/HttpCanary/blob/master/zh-CN/assets/screenshot22.png)
 
-响应修改注入支持对响应行（仅code+message）、响应头和响应体三者，其中响应头的注入和上面请求注入类似，有跟随、自定义、禁用三个选项。但响应行和Body的注入只有两个选项：跟随服务端和自定义。下图是对响应行的自定义，必须从列表中选择一项：
+响应修改注入支持对响应行（仅code+message）、响应头和响应体三者，其中响应头的注入和上面请求注入类似，有跟随、自定义、禁用三个选项。但响应行和响应体的注入只有两个选项：跟随服务端和自定义。下图是对响应行的修改，必须从列表中选择一项：
 
 ![](https://github.com/MegatronKing/HttpCanary/blob/master/zh-CN/assets/screenshot23.png)
 
