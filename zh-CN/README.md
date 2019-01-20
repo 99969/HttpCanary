@@ -1,4 +1,3 @@
-[TOC]
 
 # HttpCanary使用手册
 
