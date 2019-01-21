@@ -80,7 +80,7 @@ network_security_config文件放在 **res/xml/** 目录下面：
 
 ### 1. 指定抓包
 
-可以在HttpCanary具有针对性抓包功能，在设置中配置指定App或者指定Host/IP进行抓包。
+HttpCanary具有针对性抓包功能，在设置中配置指定App或者指定Host/IP进行抓包。
 
 ![](https://github.com/MegatronKing/HttpCanary/blob/master/zh-CN/assets/screenshot06.png)
 
