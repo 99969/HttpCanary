@@ -1,39 +1,38 @@
-# HttpCanary使用手册
+# HttpCanary User Manual
 
-HttpCanary是Android平台下功能最强大的抓包和注入工具，支持HTTP、HTTPS、HTTP2和WebSocket等多种协议。
+HttpCanary is a powerful capture and injection tool for the Android platform. It supports multiple protocols such as HTTP, HTTP2, HTTPS and WebSocket.
 
-在使用之前，建议阅读下HttpCanary的基本使用步骤和进阶用法，以便对HttpCanary的特性有一个大致的了解。
+Before using, it is recommended to read the basic usage steps and advanced usage of HttpCanary in order to have a general understanding of the features of HttpCanary.
 
-**注: 此手册以v2.1.0版本为基础编写**
+**PS: This manual is based on the v2.1.0**
 
-## 功能特性
-- [x] 无需Root，抓包时不会影响其它App的使用。
-- [x] 支持HTTP1.0、HTTP1.1、HTTP2、HTTPS和WebSocket等协议抓包。
-- [x] 支持对抓包内容进行注入修改，支持修改请求参数、请求头、请求体、响应码、响应头和响应体等数据。
-- [x] 支持对抓包数据进行筛选、搜索，以及设置抓取指定应用和指定Host/IP。
-- [x] 支持Raw、Hex、Text、Header等多种视图浏览数据。
-- [x] 支持自动解码Gzip、Deflate、Chunked等编码的数据包。
-- [x] 支持预览JSON、Form表单、图片、音频、Cookie等数据类型。
-- [x] 支持将请求和响应数据保存至文件或者加入收藏列表。
-- [x] 支持WebSocket实时预览。
-- [x] 支持文件形式分享请求和响应数据，以及使用HttpCanary打开分享文件。
-- [x] 支持屏蔽数据不发送给服务器或者不返回给客户端，方便调试。
-- [ ] 即将支持自定义扩展Mod功能。
+## Features
+- [x] No root requirement, will not affect network usage.
+- [x] Supports protocols like HTTP1.0, HTTP1.1, HTTP2, HTTPS and WebSocket.
+- [x] Supports modification and injection of capture data, you can intercept the packets and modify them.
+- [x] Supports filtering and searching for packet capture records, as well as setting the specified app and Host/IP.
+- [x] Contains Raw, Hex, Text, Header, JSON and many other viewers.
+- [x] Automatic decode data like gzip, deflate, chunked.
+- [x] Supports for previewing URL, JSON, form, image, audio, cookie, set-cookie, and many other data types.
+- [x] Supports for saving request and response data to a file or adding to favorite.
+- [x] Supports WebSocket real-time preview.
+- [x] Supports sharing of request and response data, and open shared file with HttpCanary.
+- [x] Supports blocking request and response.
 
-## 配置环境
+## Getting Started
 
-### 1. 安装证书
-HttpCanary使用Man-in-the-Middle(MITM)技术抓取和解析TLS/SSL协议数据包，比如常见的HTTPS、WSS等请求，所以使用之前需要先安装自签根证书。当首次点击右下角蓝色抓包按钮后，再点击安装 -> 输入锁屏图案或密码 -> 确定，完成证书的安装。
+### 1. Installation certificate
+HttpCanary uses Man-in-the-Middle (MITM) technology to capture and parse TLS/SSL packets, such as HTTPS, WSS, etc., so you need to install a self-signed Certificate Authorities (CA) before using it. Tap the capture button -> Confirm your pattern -> OK to complete the installation of the certificate.
 
 ![](https://github.com/MegatronKing/HttpCanary/blob/master/en-US/assets/screenshot01.png)
 
 ![](https://github.com/MegatronKing/HttpCanary/blob/master/en-US/assets/screenshot02.png)
 
-### 2. Android 7.0+手机（可选）
-从Android Nougat(7.0)开始，谷歌改变了网络安全策略。自签的CA证书将默认不被TLS/SSL连接信任，这意味着HttpCanary可能无法抓取HTTPS的明文数据。但是我们可以通过两种方式来绕过这种限制。
+### 2. Android 7.0+（Optional）
+This is an **optional** step for some special cases of the Nougat(7.0)+ system. From Android Nougat(7.0), Google changed the network security policy. Self-signed Certificate Authorities (CA) are not trusted by any apps' secure connections by default. That means HttpCanary is unable to decrypt TLS/SSL packets. But we have two ways to get around it.
 
-#### 2.1 自己APP抓包
-在项目的AndroidManifest.xml中添加networkSecurityConfig：
+#### 2.1 Your own app
+Add a network security configuration in AndroidManifest.xml:
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
 <manifest ... >
@@ -43,7 +42,7 @@ HttpCanary使用Man-in-the-Middle(MITM)技术抓取和解析TLS/SSL协议数据�
     </application>
 </manifest>
 ```
-network_security_config文件放在 **res/xml/** 目录下面：
+And the network_security_config file in **res/xml/**:
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
 <network-security-config>
@@ -55,192 +54,201 @@ network_security_config文件放在 **res/xml/** 目录下面：
     </base-config>
 </network-security-config>
 ```
-更多关于网络安全策略的信息，请前往Android Developer查看[Network security configuration](https://developer.android.com/training/articles/security-config)。
+For more information, please see Android Developer [Network security configuration](https://developer.android.com/training/articles/security-config).
 
-#### 2.2 第三方APP抓包
+#### 2.2 Third-part app
 
-我们可以借助[VirtualApp](https://github.com/asLody/VirtualApp)这款应用间接抓第三方的HTTPS包，通过以下几个步骤来配置VirtualApp抓包环境。
+We can use [VirtualApp](https://github.com/asLody/VirtualApp) to capture the third-part app's TLS/SSL packets.
 
-第一步。打开HttpCanary，进入设置 -> 安装VirtualApp，然后点击安装。注意8.0及以上的手机会限制安装来源，请勾选同意。
+Go to HttpCanary Settings -> Install VirtualApp and click to install.
 
 ![](https://github.com/MegatronKing/HttpCanary/blob/master/en-US/assets/screenshot03.png)
 
-第二步。打开VirtualApp，安装抓包目标App，然后在VirtualApp中启动目标App，这样就可以在HttpCanary看到目标App的数据包了，但是抓包记录显示的应用信息会是VirtualApp。
+Open VirtualApp and install the target app which you want to capture. Launch the installed target app from VirtualApp and then you will see the packets hosted by VirtualApp in HttpCanary.
 
 ![](https://github.com/MegatronKing/HttpCanary/blob/master/en-US/assets/screenshot04.png)
 
-## 开始抓包
+## Running HttpCanary
 
-首页右下角悬浮按钮，点击可以启动和停止抓包，长按则可以快速清除记录（小技巧哦）。
+Tap the floating button in home page to start and stop capturing packets. Remember, long presses can quickly clear the record (A trick).
 
 ![](https://github.com/MegatronKing/HttpCanary/blob/master/en-US/assets/screenshot05.png)
 
-抓包记录以列表的形式，按照时间降序排列。列表记录中包含应用图标、应用名称、请求方法、请求URL、响应码和时间等元素。点击标题栏右上角按钮，可以清空列表。
+Capture packets are sorted by time, the list contains elements such as app icon, app name, request method, request URL, response code, and time. You can clear the list by clicking the button in ActionBar.
 
-### 1. 指定抓包
+### 1. Specify Capture
 
-可以在HttpCanary具有针对性抓包功能，在设置中配置指定App或者指定Host/IP进行抓包。
+HttpCanary supports specifying capture targets, you can specify the apps or the Hosts and IPs.
 
 ![](https://github.com/MegatronKing/HttpCanary/blob/master/en-US/assets/screenshot06.png)
 
-### 2. 筛选和搜索
+### 2. Filter and Search
 
-点击首页右上角放大镜按钮，进入高级搜索页面。可以配置多种条件，对抓包数据进行筛选。
+Tap the 🔍 menu button in ActionBar and go to the advanced search page. You can configure multiple conditions to filter the packets.
 
 ![](https://github.com/MegatronKing/HttpCanary/blob/master/en-US/assets/screenshot07.png)
 
-点击高级搜索页面右上角的按钮，可以一键复位所有筛选条件。
+Tap the menu button in this page to reset all filter conditions.
 
-如果设置了筛选条件时，首页右上角的放大镜按钮图案会变成倒三角图案，表明记录已经经过了筛选。
+If a filter condition is set, the 🔍 button in ActionBar will change to an triangle icon, indicating that the record has been filtered.
 
-### 3. 数据浏览
+### 3. Packet Browsing
 
-HttpCanary提供了详尽的数据浏览功能，点击首页抓包记录打开详情页面。详情页面包含三个Tab，分别是总览、请求和响应。
+HttpCanary provides detailed data browsing capabilities. The details page contains three main tabs: Overview, Request, and Response.
 
-#### 3.1 总览
+#### 3.1 Overview
 
-总览提供了详细的数据报告，包括状态、请求协议、请求方法、响应码、服务器IP和端口、Cookie信息、Content-Type类型、请求时间、数据量等。
+The overview provides packet reports including status, request protocol, request method, response code, server IP and port, cookie, Content-Type, timing, packet sizes, and more.
 
 ![](https://github.com/MegatronKing/HttpCanary/blob/master/en-US/assets/screenshot08.png)
 
-小技巧：长按数据条目可以快速复制哦。
+Tips: Long press an item to copy it quickly.
 
-如果URL带有参数，点击URL条目，可以进入URL预览页：
+If the URL has query parameters, tap the item to go to the URL preview page:
 
 ![](https://github.com/MegatronKing/HttpCanary/blob/master/en-US/assets/screenshot09.png)
 
-点击Cookie，可以进入Cookie预览页：
+Tap the Cookie item to go to the Cookie preview page:
 
 ![](https://github.com/MegatronKing/HttpCanary/blob/master/en-US/assets/screenshot10.png)
 
-点击Set-Cookie，可以进入Set-Cookie预览页：
+Tap the Set-Cookie item to go to the Set-Cookie preview page:
 
 ![](https://github.com/MegatronKing/HttpCanary/blob/master/en-US/assets/screenshot11.png)
 
-#### 3.2 请求和响应
+#### 3.2 Request and Response
 
-请求和响应包含多种视图，点击下方的Tab进行切换。
+The request and response contain multiple viewers, tap the bottom tabs to switch.
 
-##### 3.2.1 Raw视图
+##### 3.2.1 Raw Viewer
 
-Raw视图是指原数据视图，未做任何解码和转码，包含整个HTTP的请求数据。可以长按选择数据进行复制操作。
+The Raw viewer presents the original packet data, without any decoding and decrypting. The viewer contains the full packet data. You can long press and select data to copy.
 
 ![](https://github.com/MegatronKing/HttpCanary/blob/master/en-US/assets/screenshot12.png)
 
-由于字符限制，此视图最多显示32k的数据。
+This viewer displays up to 32k of data due to character limitations.
 
-##### 3.2.2 Header视图
+##### 3.2.2 Header Viewer
 
-Header视图分别包含请求行、请求头、响应行、响应头，长按可以进行快速复制。
+The Header viewer presents request lines, request headers, response lines, and response headers. Long press an item to copy quickly.
 
 ![](https://github.com/MegatronKing/HttpCanary/blob/master/en-US/assets/screenshot13.png)
 
-##### 3.2.3 Text视图
+##### 3.2.3 Text Viewer
 
-Text视图显示请求体数据，会自动对Gzip、Chunked、Deflate等进行解码显示。可以长按选择数据进行复制操作。
+The Text viewer presents content data, will automatically decode data like gzip, chunked, deflate, etc.. Long press an item to copy quickly.
 
 ![](https://github.com/MegatronKing/HttpCanary/blob/master/en-US/assets/screenshot14.png)
 
-由于字符限制，此视图最多显示32k的数据。
+This viewer displays up to 32k of data due to character limitations.
 
-##### 3.2.4 Hex视图
+##### 3.2.4 Hex Viewer
 
-Hex视图以十六进制的形式显示数据，方便进行数据类型解析。
+The Hex viewer presents content data in hex format, it will be easy to analyze them.
 
 ![](https://github.com/MegatronKing/HttpCanary/blob/master/en-US/assets/screenshot15.png)
 
-由于字符限制，此视图最多显示32k的数据。
+This viewer displays up to 32k of data due to character limitations.
 
-##### 3.2.5 预览视图
+##### 3.2.5 Preview Viewer
 
-HttpCanary支持一些常用数据的预览，包括JSON、Form表单、图片和音频等。
+HttpCanary supports previews of some data types, like JSON, Forms, images, audio and so on.
 
 ![](https://github.com/MegatronKing/HttpCanary/blob/master/en-US/assets/screenshot16.png)
 
-##### 3.2.6 JSON视图
+##### 3.2.6 JSON Viewer
 
-如果数据类型是JSON，可以在预览视图中点击JSON内容可以打开JSON视图。JSON视图可以单独对JSON进行节点展开、闭合、复制和保存等操作，还支持横竖屏切换浏览功能。
+If the data type is JSON, you can open the JSON viewer by clicking the JSON content. You can operate JSON nodes, expand or collapse all nodes. It also supports horizontal screen.
 
 ![](https://github.com/MegatronKing/HttpCanary/blob/master/en-US/assets/screenshot17.png)
 
-##### 3.2.7 音频视图
+##### 3.2.7 Audio Viewer
 
-如果数据类型是音频格式，可以在预览视图中点击打开音频视图。音频视图支持播放和保持音频功能。
+If the data type is an audio, you can click to open the audio viewer. The audio viewer supports audio playback and saving.
 
 ![](https://github.com/MegatronKing/HttpCanary/blob/master/en-US/assets/screenshot18.png)
 
-##### 3.2.8 WebSocket视图
+##### 3.2.8 WebSocket Viewer
 
-HttpCanary支持以聊天的形式展示WebSocket数据。
+The WebSocket viewer presents the packets in the form of a chat.
 
 ![](https://github.com/MegatronKing/HttpCanary/blob/master/en-US/assets/screenshot19.png)
 
-#### 3.3 数据保存
+#### 3.3 Packet Save
 
-在详情页面，点击右上角保存按钮可以将请求和响应保存成文件。保存的文件有三个：原始数据（raw）、头部数据（header）、内容数据（text）。保存目录在SD卡HttpCanar/download目录下面。
+You can save the request and response packets in this page. The packets will be save into three files: raw file, header file, text file. And you will find the save files in /HttpCanar/download directory.
 
-#### 3.4 数据分享
+#### 3.4 Packet Share
 
-在详情页面，点击右上角分析按钮可以将请求和响应文件分享出去，分享的文件格式是hcy。hcy格式文件可以使用HttpCanary直接打开。
+You can share the request and response packets to others in this page too.  The shared file format is ‘.hcy’. This file can be opened directly with HttpCanary.
 
-## 注入功能
+## Injection
 
-HttpCanary最强大之处在于可以对数据进行注入修改，能够极大地方便开发者调试和测试接口。**此功能是付费版本功能，免费版本有7天的试用期**。
+Injection is one of the core functions of HttpCanary. You can modify the request and response to hack the packets.
 
-HttpCanary提供了两种不同的注入模式，分别是静态注入和动态注入。在首页长按抓包记录，然后在弹框中选择一种注入模式。
+**This feature is a paid version feature, and the free version has a 7-day trial.**。
+
+HttpCanary provides two different modes for the injection. They are static mode and dynamic mode. You can long press on the record to choose an injection mode.
 
 ![](https://github.com/MegatronKing/HttpCanary/blob/master/en-US/assets/screenshot20.png)
 
-### 1. 静态注入
+### 1. Static Mode
 
-静态注入支持对HTTP/HTTPS包全量的修改注入，包括请求参数、请求头、请求体、响应行、响应头、响应体等。另外，如果配置了静态注入，注入器将会缓存起来，以便后面重复使用。但是可以前往App的设置 -> 模组管理种，对其进行禁用、启用、删除等操作。
+Static mode supports the full injection of the HTTP/HTTPS packets, includes query parameters, request headers, request body, response status line, response headers and response body.
 
-#### 1.1 请求修改
+If you configured a static mode injection, the injector will be stored for next usage. And you can manage them in Settings -> Mod Manager. In mod manager, you can disable, enable or delete an injector.
+
+
+#### 1.1 Request Injection
 
 ![](https://github.com/MegatronKing/HttpCanary/blob/master/en-US/assets/screenshot21.png)
 
-上图是对请求进行修改注入，这里Path、协议版本号以及请求方法是不支持修改的。请求参数（Query Parameters）以及Headers的注入都是键值对的形式（请求体的修改注入请参考下方响应注入），静态注入对此提供了三种注入选项：跟随，自定义，禁用。
+Static mode provides an injection edit page to preprocess data. You can choose to inject the query parameters, request headers or the request body.
 
-- 跟随：表示使用客户端发给服务器的原始数据，不进行任何干预。
-- 自定义：自定义key和value，会根据key对客户端的请求数据进行覆盖，无需覆盖即当做新增（等同Map的put操作）。
-- 禁用：表示删除客户端发给服务器的key-value数据（等同Map的remove操作）。
+For the query parameters and headers injection, static mode has three options: follow, custom, disable.
 
-#### 1.2 响应修改
+- Follow：Use the original data from client, do nothing to them.
+- Custom：Add or replace the value by key, like Map add operation.
+- Disable：Remove the key and value from client, like Map remove operation.
+
+For the body injection, see the following response injection.
+
+#### 1.2 Response Injection
 
 ![](https://github.com/MegatronKing/HttpCanary/blob/master/en-US/assets/screenshot22.png)
 
-响应修改注入支持对响应行（仅code+message）、响应头和响应体三者，其中响应头的注入和上面请求注入类似，有跟随、自定义、禁用三个选项。但响应行和响应体的注入只有两个选项：跟随服务端和自定义。下图是对响应行的修改，必须从列表中选择一项：
+Static mode supports injecting response status line, headers and body. The following figure is an injection of the status line, you can select one from the list:
 
 ![](https://github.com/MegatronKing/HttpCanary/blob/master/en-US/assets/screenshot23.png)
 
-对于响应体的注入有两种方式：
-- 上传文件整体替换。点击可以从手机上选择一个文件，如果有需要替换的数据，可以先保存成文件，然后在这里选择就可以了。
-- 直接编辑。如果数据量较小，可以直接编辑后提交。
+For the body injection, static mode provides two ways.
+
+- Upload a body file, tap the upload icon and select a file from File Browser.
+- Edit online, it supports only when the body data is human readable.
 
 ![](https://github.com/MegatronKing/HttpCanary/blob/master/en-US/assets/screenshot24.png)
 
-### 2. 动态注入
+### 2. Dynamic Mode
 
-动态注入需要在抓包服务运行的过程中进行。相比于静态注入，动态注入不支持对请求体和响应体的注入，主要是由于手机端不方便处理太大数据类型的请求体和响应体。如果使用动态注入，必须先将抓包服务运行起来。 **动态注入过程中，所有请求和响应都会Block住** ，所以切记注入不要花太长时间，防止请求或者响应超时。
+Compare to static mode, the dynamic mode doesn't support the injection of request body and response body. This is due to the difficulty of handling big data bodies on mobile apps. We are considering to support tiny bodies later.
+
+You can use the dynamic mode when the capture service is running. And remember that you should handle the data before timeout.
 
 ![](https://github.com/MegatronKing/HttpCanary/blob/master/en-US/assets/screenshot25.png)
 
-### 3. 注入结果
+### 3. Injection Results
 
-如果注入成功，抓包记录右下角会显示已注入的标记。
+If a request is injected, the record item will show an indicated text.
 
 ![](https://github.com/MegatronKing/HttpCanary/blob/master/en-US/assets/screenshot26.png)
 
 
-## 疑问解答
+## FAQ
 
-问: 付费版本相比免费版本有哪些特性？<br>
-答: 付费版本无广告、无限制使用注入功能、更完美的用户体验等。
+Q: What is the difference between paid version and free version?<br>
+A: The paid version has no ads, unlimited use of injections, a more perfect user experience, and more.
 
-问: 怎么样获取付费版本？<br>
-答: 可以在GooglePlay直接购买，如果无法付款可以邮件guoshi.support@qq.com或者微信king20091305035联系我购买GooglePlay兑换码。
-
-问: 为什么有的请求抓不到？<br>
-答: 如果是Android 7.0+手机，请参考本手册环境配置。如果按照配置还是抓不到，可能是客户端或者服务端对SSL证书做了安全校验，这种情况是抓不到包的。
+Q: Why are some requests not caught?<br>
+A: If you use an Android 7.0+ phone, please refer to the Getting Started of this manual. If you follow the configuration, still have the issue. I think maybe the client or the server did a security check on the SSL certificate, and in this case, the packet cannot be captured.
 
 
