@@ -1,3 +1,8 @@
 # Welcome to HttpCanary
 
-## [wifi](https://github.com/MegatronKing/HttpCanary/wiki)
+- [Wiki](https://github.com/MegatronKing/HttpCanary/wiki)
+- [Download](https://github.com/MegatronKing/HttpCanary/wiki/Download)
+- [User Manual](https://github.com/MegatronKing/HttpCanary/wiki/User-Manual)
+
+
+
